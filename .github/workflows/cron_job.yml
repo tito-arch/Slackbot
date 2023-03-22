@@ -16,7 +16,13 @@ jobs:
           python-version: 3.x
       - name: Install dependencies
         run: |
-          pip install -r src/requirements.txt
+          pip install -r requirements.txt
+      - name: Create/Update latest_post.txt
+        run: |
+          if [ ! -f latest_post.txt ]; then
+            touch latest_post.txt
+          fi
+          echo "$(curl -s https://www.bunnieabc.com/index.xml)" > latest_post.txt
       - name: Run Python script
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
