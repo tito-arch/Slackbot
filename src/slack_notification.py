@@ -1,5 +1,6 @@
 import feedparser
 import requests
+import os
 
 # Define the RSS feed URL and Slack webhook URL
 rss_url = "https://www.bunnieabc.com/index.xml"
