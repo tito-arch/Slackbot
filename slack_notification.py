@@ -34,3 +34,5 @@ with open('latest_post.txt', 'r+') as f:
             print("Error sending notification:", response.status_code)
     else:
         print("No new post found.")
+
+#DONE        
