@@ -16,8 +16,8 @@ jobs:
           python-version: 3.x
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt
+          pip install -r src/requirements.txt
       - name: Run Python script
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        run: python slack_notification.py
+        run: python src/slack_notification.py
