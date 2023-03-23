@@ -1,12 +1,9 @@
-name: Send Slack notification
-
-on:
-  push:
-    branches: [main]
-
+name: My Workflow
+on: push
 jobs:
-  send_notification:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Send Slack notification
-        run: curl -X POST -H 'Content-type:application/json' --data '{"text":"Hello from GitHub Actions"}' $SLACK_WEBHOOK_URL
+        run: |
+          curl -X POST -H 'Content-type: application/json' --data '{"text":"Hello from GitHub Actions"}' "${{ secrets.SLACK_WEBHOOK_URL }}"
