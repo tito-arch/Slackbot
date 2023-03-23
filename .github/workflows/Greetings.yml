@@ -1,0 +1,9 @@
+jobs:
+  notify_slack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send notification to Slack
+        uses: slack/webhook-action@v2
+        with:
+          url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          payload: '{"text": "Hello from GitHub Actions!"}'
