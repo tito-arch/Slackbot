@@ -1,10 +1,12 @@
-name: Verify Slack webhook URL
+name: Send Slack notification
 
-on: [push]
+on:
+  push:
+    branches: [main]
 
 jobs:
-  verify_slack_webhook:
+  send_notification:
     runs-on: ubuntu-latest
     steps:
-      - name: Verify Slack webhook URL
-        run: echo "SLACK_WEBHOOK_URL secret is set to '${{ secrets.SLACK_WEBHOOK_URL }}'"
+      - name: Send Slack notification
+        run: curl -X POST -H 'Content-type:application/json' --data '{"text":"Hello from GitHub Actions"}' $SLACK_WEBHOOK_URL
