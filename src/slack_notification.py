@@ -6,7 +6,6 @@ import os
 rss_url = "https://www.bunnieabc.com/index.xml"
 slack_url = os.environ['SLACK_WEBHOOK_URL']
 
-
 # Define the notification message format
 message_format = "New post published on {blog_title}:\n<{post_url}|{post_title}>"
 
@@ -35,5 +34,3 @@ with open('latest_post.txt', 'r+') as f:
             print("Error sending notification:", response.status_code)
     else:
         print("No new post found.")
-
-#DONE        
