@@ -14,23 +14,27 @@ feed = feedparser.parse(rss_url)
 latest_post = feed.entries[0]
 
 # Check if the latest post is different from the previous one
-with open('latest_post.txt', 'r+') as f:
-    previous_post_link = f.read()
-    if latest_post.link != previous_post_link:
-        # Construct the notification message
-        message = message_format.format(blog_title=feed.feed.title, post_title=latest_post.title, post_url=latest_post.link)
+if os.path.exists('latest_post.txt'):
+    with open('latest_post.txt', 'r+') as f:
+        previous_post_link = f.read()
+        if latest_post.link != previous_post_link:
+            # Construct the notification message
+            message = message_format.format(blog_title=feed.feed.title, post_title=latest_post.title, post_url=latest_post.link)
 
-        # Send the notification to the Slack webhook URL
-        response = requests.post(slack_url, json={"text": message})
+            # Send the notification to the Slack webhook URL
+            response = requests.post(slack_url, json={"text": message})
 
-        # Check the response status code to ensure the notification was sent successfully
-        if response.status_code == 200:
-            print("Notification sent successfully!")
-            # Write the link of the latest post to the file
-            f.seek(0)
-            f.write(latest_post.link)
-            f.truncate()
+            # Check the response status code to ensure the notification was sent successfully
+            if response.status_code == 200:
+                print("Notification sent successfully!")
+                # Write the link of the latest post to the file
+                f.seek(0)
+                f.write(latest_post.link)
+                f.truncate()
+            else:
+                print("Error sending notification:", response.status_code)
         else:
-            print("Error sending notification:", response.status_code)
-    else:
-        print("No new post found.")
+            print("No new post found.")
+else:
+    with open('latest_post.txt', 'w') as f:
+        f.write(latest_post.link)
