@@ -1,48 +1,27 @@
-# Name of the workflow
-name: Cron Job
+name: Slack Notification
 
-# Specify the trigger for the workflow
 on:
-  # Run the workflow on a schedule
   schedule:
-    # Run the job every 5 minutes
-    - cron: '*/5 * * * *'
+    - cron: "0 * * * *"
 
-# Define the jobs to be run in the workflow
 jobs:
-  build:
-    # Specify the type of machine to run the job on
+  slack_notification:
     runs-on: ubuntu-latest
-
-    # Define the steps to be run in the job
     steps:
-      # Check out the repository
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Set up the Python environment
-      - name: Set up Python 3.x
+      - name: Set up Python environment
         uses: actions/setup-python@v2
         with:
-          python-version: 3.x
+          python-version: '3.x'
 
-      # Install dependencies from the requirements file
       - name: Install dependencies
         run: |
-          cd src
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Create or update the latest_post.txt file
-      - name: Create/Update latest_post.txt
-        run: |
-          if [ ! -f latest_post.txt ]; then
-            touch latest_post.txt
-          fi
-          echo "$(curl -s https://www.bunnieabc.com/index.xml)" > latest_post.txt
-
-      # Run the Python script to send Slack notifications
-      - name: Run Python script
+      - name: Run script
         env:
-          # Set the SLACK_WEBHOOK_URL environment variable to the webhook URL for your Slack channel
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: python src/slack_notification.py
