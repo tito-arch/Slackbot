@@ -20,13 +20,13 @@ jobs:
           pip install -r requirements.txt
       - name: Get latest post
         run: |
-          if [ ! -f latest_post.txt ]; then
-            touch latest_post.txt
+          if [ ! -f src/latest_post.txt ]; then
+            touch src/latest_post.txt
           fi
           LATEST_POST="$(curl -s https://www.example.com/index.xml | grep -oP '(?<=<title>)[^<]+')"
-          PREVIOUS_POST="$(cat latest_post.txt)"
+          PREVIOUS_POST="$(cat src/latest_post.txt)"
           if [ "$LATEST_POST" != "$PREVIOUS_POST" ]; then
-            echo "$LATEST_POST" > latest_post.txt
+            echo "$LATEST_POST" > src/latest_post.txt
             echo "Latest post has been updated. Sending notification to Slack..."
             curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"The latest post is now: $LATEST_POST\"}" "${{ secrets.SLACK_WEBHOOK_URL }}"
           else
