@@ -1,11 +1,11 @@
-name: Cron Job
+name: Latest Post Notification
 
 on:
   schedule:
     - cron: '*/5 * * * *' # Run every 5 minutes
 
 jobs:
-  build:
+  check_post:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -18,13 +18,17 @@ jobs:
         run: |
           cd src
           pip install -r requirements.txt
-      - name: Create/Update latest_post.txt
+      - name: Get latest post
         run: |
           if [ ! -f latest_post.txt ]; then
             touch latest_post.txt
           fi
-          echo "$(curl -s https://www.bunnieabc.com/index.xml)" > latest_post.txt
-      - name: Run Python script
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        run: python src/slack_notification.py
+          LATEST_POST="$(curl -s https://www.example.com/index.xml | grep -oP '(?<=<title>)[^<]+')"
+          PREVIOUS_POST="$(cat latest_post.txt)"
+          if [ "$LATEST_POST" != "$PREVIOUS_POST" ]; then
+            echo "$LATEST_POST" > latest_post.txt
+            echo "Latest post has been updated. Sending notification to Slack..."
+            curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"The latest post is now: $LATEST_POST\"}" "${{ secrets.SLACK_WEBHOOK_URL }}"
+          else
+            echo "No new posts."
+          fi
