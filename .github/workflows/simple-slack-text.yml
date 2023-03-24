@@ -1,9 +1,31 @@
-name: My Workflow
-on: push
+
+name: Cron Job
+
+on:
+  schedule:
+    - cron: '*/5 * * * *' # Run every 5 minutes
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Send Slack notification
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+      - name: Install dependencies
         run: |
-          curl -X POST -H 'Content-type: application/json' --data '{"text":"Hello from GitHub Actions"}' "${{ secrets.SLACK_WEBHOOK_URL }}"
+          cd src
+          pip install -r requirements.txt
+      - name: Create/Update latest_post.txt
+        run: |
+          if [ ! -f latest_post.txt ]; then
+            touch latest_post.txt
+          fi
+          echo "$(curl -s https://www.bunnieabc.com/index.xml)" > latest_post.txt
+      - name: Run Python script
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: python src/slack_notification.py
