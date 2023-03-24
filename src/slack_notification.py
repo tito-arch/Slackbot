@@ -1,9 +1,10 @@
 import feedparser
 import requests
+import os
 
 # Define the RSS feed URL and Slack webhook URL
 rss_url = "https://www.bunnieabc.com/index.xml"
-slack_url = os.environ['SLACK_WEBHOOK_URL']
+slack_url = os.environ['SLACK_WEBHOOK_URL'] = "https://hooks.slack.com/services/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"
 
 
 # Define the notification message format
