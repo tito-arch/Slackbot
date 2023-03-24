@@ -1,34 +1,27 @@
-name: Latest Post Notification
+name: Slack Notification Workflow
 
 on:
   schedule:
-    - cron: '*/5 * * * *' # Run every 5 minutes
+    # Run the workflow every 30 minutes
+    - cron: '*/30 * * * *'
 
 jobs:
-  check_post:
+  slack_notification:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Set up Python 3.x
+        with:
+          fetch-depth: 0
+      - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.x
+          python-version: '3.8'
       - name: Install dependencies
         run: |
-          cd src
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: Get latest post
-        run: |
-          if [ ! -f src/latest_post.txt ]; then
-            touch src/latest_post.txt
-          fi
-          LATEST_POST="$(curl -s https://bunnieabc.com/index.xml | grep -oP '(?<=<title>)[^<]+')"
-          PREVIOUS_POST="$(cat src/latest_post.txt)"
-          if [ "$LATEST_POST" != "$PREVIOUS_POST" ]; then
-            echo "$LATEST_POST" > src/latest_post.txt
-            echo "Latest post has been updated. Sending notification to Slack..."
-            curl -X POST -H 'Content-type: application/json' --data "{\"text\":\"I am Lisa. The latest post is now: $LATEST_POST\"}" "${{ secrets.SLACK_WEBHOOK_URL }}"
-          else
-            echo "No new posts."
-          fi
+      - name: Run script
+        run: python src/slack_notification.py
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
