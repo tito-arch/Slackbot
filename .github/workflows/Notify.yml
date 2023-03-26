@@ -2,7 +2,7 @@ name: Chirp Works
 
 on:
   schedule:
-    - cron: '*/40 * * * *' # Run every 5 minutes
+    - cron: '*/40 * * * *' # Run every 40 minutes
 
 jobs:
   build:
