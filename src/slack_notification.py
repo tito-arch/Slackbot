@@ -4,7 +4,7 @@ import os
 
 # Define the RSS feed URL and Slack webhook URL
 rss_url = "https://www.bunnieabc.com/index.xml"
-slack_url = os.environ['SLACK_WEBHOOK_URL'] = "https://hooks.slack.com/services/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"
+slack_url = os.environ['SLACK_WEBHOOK_URL']
 
 # Define the notification message format
 message_format = "New post published on {blog_title}:\n<{post_url}|{post_title}>"
