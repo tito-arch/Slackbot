@@ -20,10 +20,10 @@ jobs:
           pip install -r requirements.txt
       - name: Create/Update latest_post.txt
         run: |
-          if [ ! -f latest_post.txt ]; then
-            touch latest_post.txt
+          if [ ! -f src/latest_post.txt ]; then
+            touch src/latest_post.txt
           fi
-          echo "$(curl -s https://www.bunnieabc.com/index.xml)" > latest_post.txt
+          python src/update_latest_post.py
       - name: Run Python script
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
