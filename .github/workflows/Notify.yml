@@ -18,12 +18,7 @@ jobs:
         run: |
           cd src
           pip install -r requirements.txt
-      - name: Create/Update latest_post.txt
-        run: |
-          if [ ! -f src/latest_post.txt ]; then
-            touch src/latest_post.txt
-          fi
-          python src/update_latest_post.py
+      
       - name: Run Python script
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
